@@ -18,7 +18,7 @@ import app.Entity.Autor;
 import app.Service.AutorService;
 
 @RestController
-@RequestMapping("/api/Autor")
+@RequestMapping("/api/autor")
 public class AutorController {
 
 	@Autowired

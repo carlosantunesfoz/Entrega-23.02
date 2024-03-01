@@ -1,79 +1,48 @@
 package app.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import app.Entity.Autor;
+import app.Repository.AutorRepository;
 
 @Service
 public class AutorService {
-		List<Autor> lista = new ArrayList<>();
-
+		
+	@Autowired
+		private AutorRepository autorRepository;
+		
 		public String save(Autor autor) {
-			lista.add(autor);
-			return autor.getNome()+ " salvo com sucesso";
+			this.autorRepository.save(autor);
+			return "salvo com sucesso";
 		}
 
 		public String update(long id, Autor autor) {
 			
-			lista = this.listAll();
-
-			if(lista != null)
-				for(int i=0; i<lista.size(); i++) {
-					if(lista.get(i).getId() == id) {
-						lista.set(i, autor);
-						return autor.getNome()+ " alterado com sucesso";
-					}
-				}
-
-			return "autor ainda não nasceu";
+			autor.setId(id);
+			this.autorRepository.save(autor);
+			return "alterado com sucesso";
 		}
 
 		public List<Autor> listAll(){
 
-			Autor autor = new Autor(1, "Rick Riordian", "0821", 52);
-			Autor autor2 = new Autor(2, "Cristina grey", "1981", 41);
-
-			lista.add(autor);
-			lista.add(autor2);
-
-			return lista;
+			return this.autorRepository.findAll();
 
 		}
 
-		public Autor findById(long idAutor) {
+		public Autor findById(long id) {
 
-			// banco de dados
-			lista = this.listAll();
-
-			if(lista != null)
-				for(int i=0; i<lista.size(); i++) {
-					if(lista.get(i).getId() == idAutor) {
-						return lista.get(i);
-					}
-				}
-
-			return null;
-
+			Optional<Autor> autor = this.autorRepository.findById(id);
+			return autor.get();
 		}
 
-		public String delete(long idAutor) {
+		public String delete(long id) {
 
-			// banco de dados
-			lista = this.listAll();
+			this.autorRepository.deleteById(id);
+			return "excluido, tmj";
 
-			if(lista != null)
-				for(int i=0; i<lista.size(); i++) {
-					if(lista.get(i).getId() == idAutor) {
-						lista.remove(lista.get(i));
-						return "Deletado com sucesso";
-					}
-				}
-
-			return "Escreve direito ai";
-
-		}
-
+}
 }

@@ -71,12 +71,12 @@ public class BibliotecaController {
 		}
 	}
 	
-	@GetMapping("/findIdBy/{idBiblioteca}")
-	public ResponseEntity<Biblioteca> findById(@PathVariable long idBiblioteca){
+	@GetMapping("/findById/{id}")
+	public ResponseEntity<Biblioteca> findById(@PathVariable long id){
 		
 		try {
 			
-			Biblioteca biblioteca = this.bibliotecaService.findById(idBiblioteca);
+			Biblioteca biblioteca = this.bibliotecaService.findById(id);
 			return new ResponseEntity<>(biblioteca, HttpStatus.OK);
 			
 		} catch (Exception e) {

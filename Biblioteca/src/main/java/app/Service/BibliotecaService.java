@@ -2,76 +2,49 @@ package app.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import app.Entity.Biblioteca;
+import app.Repository.BibliotecaRepository;
 
 @Service
 public class BibliotecaService {
-	List<Biblioteca> lista = new ArrayList<>();
+	
+	@Autowired
+	private BibliotecaRepository bibliotecaRepository;
 	
 	public String save(Biblioteca biblioteca) {
-		lista.add(biblioteca);
-		return biblioteca.getNome()+ "salvo com sucesso";
+		this.bibliotecaRepository.save(biblioteca);
+		return "salvo com sucesso";
 	}
-	
 	
 	public String update(long id, Biblioteca biblioteca) {
 		
-		lista = this.listAll();
-		
-		if(lista != null)
-			for(int i=0; i<lista.size(); i++) {
-				if(lista.get(i).getId() == id) {
-					lista.set(i, biblioteca);
-					return biblioteca.getNome()+ " alterado com sucesso";
-				}
-			}
-		
-			return "carro não encontrado para alterar";	
+		biblioteca.setId(id);
+		this.bibliotecaRepository.save(biblioteca);
+		return "alterado com sucesso";
 	}
 	
 	
 	public List<Biblioteca> listAll(){
 		
-		Biblioteca biblioteca1 = new Biblioteca(1, "Porto meira", 4599933);
-		Biblioteca biblioteca2 = new Biblioteca(2, "Morumbi", 4599952);
-		
-		lista.add(biblioteca1);
-		lista.add(biblioteca2);
-		
-		return lista;
+		return this.bibliotecaRepository.findAll();
 		
 	}
 	
-	public Biblioteca findById(long idBiblioteca) {
+	public Biblioteca findById(long id) {
 		
-		lista = this.listAll();
-		
-		if(lista != null)
-			for(int i=0; i<lista.size(); i++) {
-				if(lista.get(i).getId() == idBiblioteca) {
-					return lista.get(i);
-				}
-			}
-		
-		return null;		
+		Optional<Biblioteca> biblioteca = this.bibliotecaRepository.findById(id);
+		return biblioteca.get();		
 	}
 	
-	public String delete(long idBiblioteca) {
+	public String delete(long id) {
 		
-		lista = this.listAll();
-		
-		if(lista!= null)
-			for(int i=0; i<lista.size(); i++) {
-				if(lista.get(i).getId() == idBiblioteca) {
-					lista.remove(lista.get(i));
-					return "deletado com sucesso";
-				}
-			}
-		
-		return "Não encontrado para deletar";
+		this.bibliotecaRepository.deleteById(id);
+		return "deletado com sucesso";
 		
 	}
 	
