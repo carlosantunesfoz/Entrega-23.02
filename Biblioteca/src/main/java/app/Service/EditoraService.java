@@ -1,78 +1,48 @@
 package app.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import app.Entity.Editora;
+import app.Repository.EditoraRepository;
 
 @Service
 public class EditoraService {
-	List<Editora> lista = new ArrayList<>();
+	
+	@Autowired
+	private EditoraRepository editoraRepository;
 
 	public String save(Editora editora) {
-		lista.add(editora);
-		return editora.getNome()+ " salvo com sucesso";
+		this.editoraRepository.save(editora);
+		return "salvou ai chefia";
 	}
 
 	public String update(long id, Editora editora) {
-		
-		lista = this.listAll();
-
-		if(lista != null)
-			for(int i=0; i<lista.size(); i++) {
-				if(lista.get(i).getId() == id) {
-					lista.set(i, editora);
-					return editora.getNome()+ " alterado com sucesso";
-				}
-			}
-
-		return "Editora não existe";
+		editora.setId(id);
+		this.editoraRepository.save(editora);
+		return "alterado la meu nobre";
 	}
 
 	public List<Editora> listAll(){
 
-		Editora editora = new Editora(1, "santaCcasa", "alamedaAmetista", "deuErro");
-		Editora editora2 = new Editora(2, "casaSanta", "alamedaCristais", "45857");
-
-		lista.add(editora);
-		lista.add(editora2);
-
-		return lista;
+		return this.editoraRepository.findAll();
 
 	}
 
-	public Editora findById(long idEditora) {
+	public Editora findById(long id) {
 
-		// banco de dados
-		lista = this.listAll();
-
-		if(lista != null)
-			for(int i=0; i<lista.size(); i++) {
-				if(lista.get(i).getId() == idEditora) {
-					return lista.get(i);
-				}
-			}
-
-		return null;
+		Optional<Editora> editora = this.editoraRepository.findById(id);
+		return editora.get();
 
 	}
 
-	public String delete(long idEditora) {
+	public String delete(long id) {
 
-		// banco de dados
-		lista = this.listAll();
-
-		if(lista != null)
-			for(int i=0; i<lista.size(); i++) {
-				if(lista.get(i).getId() == idEditora) {
-					lista.remove(lista.get(i));
-					return "no hay mas";
-				}
-			}
-
-		return "Não encontrado para deletar";
+		this.editoraRepository.deleteById(id);
+		return "deletemos o trme lá";
 
 	}
 }

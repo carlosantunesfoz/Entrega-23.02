@@ -1,68 +1,48 @@
 package app.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import app.Entity.Livro;
+import app.Repository.LivroRepository;
 
 @Service
 public class LivroService {
-	List<Livro> lista = new ArrayList<>();
+	
+	@Autowired
+	private LivroRepository livroRepository;
 	
 	public String save(Livro livro) {
-		lista.add(livro);
-		return livro.getTitulo() +" Salvo com sucesso";
+		this.livroRepository.save(livro);
+		return "livro cadastrado";
 	}
 	
 	public String update(long id, Livro livro) {
 		
-		lista = this.listAll();
-		
-		if(lista != null)
-			for(int i=0; i<lista.size(); i++) {
-				if(lista.get(i).getId() == id) {
-					lista.set(i, livro);
-					return livro.getTitulo()+ "alterado com sucesso";
-				}
-			}
-		return "Livro não encontrado";
+		livro.setId(id);
+		this.livroRepository.save(livro);
+		return "altermos o livro cabrão";
 	}
 	
 	public List<Livro> listAll(){
 		
-		Livro livro = new Livro(1, "nulo", "Percy", "perdeu o raio", 2005, 240);
-		lista.add(livro);
-		return lista;
+		return this.livroRepository.findAll();
 		
 	}
 	
-	public Livro findById(long idLivro) {
+	public Livro findById(long id) {
 	
-	lista = this.listAll();
-	if(lista != null)
-		for(int i=0; i<lista.size(); i++) {
-			if(lista.get(i).getId() == idLivro) {
-				return lista.get(i);
-			}
-		}
-	
-	return null;
-	
+	Optional<Livro> livro = this.livroRepository.findById(id);
+	return livro.get();
 	}
 	
-	public String delete (long idLivro) {
+	public String delete (long id) {
 		
-		lista = this.listAll();
-		if (lista != null)
-			for(int i=0; i<lista.size(); i++) {
-				if(lista.get(i).getId() == idLivro) {
-					lista.remove(lista.get(i));
-					return "deletado com sucesso";
-				}
-			}
-		return "Não encontramos seu livro";
+		this.livroRepository.deleteById(id);
+		return "deletamos la chefia";
 	}
 	
 }
